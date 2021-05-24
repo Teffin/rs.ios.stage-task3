@@ -2,31 +2,54 @@
 
 NSArray *LevelOrderTraversalForTree(NSArray *tree) {
     
-    long i = 0;
-    long j = -1;
+    long indexLevel = -1;
+    bool firstNil = true;
     NSMutableArray *returnValue = [[NSMutableArray alloc] init];
-    NSMutableDictionary *treeLevel = [[NSMutableDictionary alloc] init];
-    
+    NSMutableArray *treeLevel = [[NSMutableArray alloc] init];
+    if (tree.count > 0)
+    {
+        if (tree[0] == [NSNull null])
+        {
+            return @[];
+        }
+    }
     for (id part in tree)
     {
-        NSLog(@"%@", part);
 
-        
-        if (part == nil)
+        if (part == [NSNull null])
         {
-            continue ;
+            if (firstNil)
+            {
+                firstNil = false;
+            }
+            else
+            {
+                [treeLevel removeLastObject];
+                indexLevel = [[treeLevel lastObject] intValue];
+            }
         }
-        else if (i > j)
+        else
         {
-            [returnValue addObject:[[NSMutableArray alloc] init]];
-            //[treeLevel setValue:@2 forKey:i];
-            j = i;
+            indexLevel++;
+            [treeLevel addObject:[NSNumber numberWithInteger:indexLevel]];
+
+            if (indexLevel >= [[treeLevel lastObject] intValue])
+            {
+                [returnValue addObject:[[NSMutableArray alloc] init]];
+            }
+            [returnValue[indexLevel] addObject:part];
+            
+    
+            firstNil = true;
         }
         
-        [returnValue[i] addObject:part];
-        i++;
+
     }
-    NSLog(@"%@", returnValue);
 
+    
+    if ([[returnValue lastObject] count] == 0)
+    {
+        [returnValue removeLastObject];
+    }
     return returnValue;
 }
